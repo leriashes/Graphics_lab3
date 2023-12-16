@@ -3,8 +3,8 @@ import object3D
 
 
 class Sphere(object3D.Object3D):
-    def __init__(self, x, y, z, r, render, res=10):
-        super().__init__(render)
+    def __init__(self, x, y, z, r, color, render, res=10):
+        super().__init__(render, color)
 
         latitudes = [n * np.pi / res for n in range(1, res)] #вычисление "широт" (без полюсных)
         longitudes = [n * 2 * np.pi / res for n in range(res)] #вычисление "долгот"

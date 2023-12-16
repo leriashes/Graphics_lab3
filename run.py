@@ -17,7 +17,7 @@ class Renderer:
     def create_objects(self):
         self.camera = Camera(self, [0, 0, -20])
         self.projection = Projection(self)
-        self.object = Sphere(0, 0, 0, 5, self, res=60)
+        self.object = Sphere(0, 0, 0, 5, color, self, res)
 
     def draw(self):
         self.screen.fill(pg.Color('dimgrey'))
@@ -34,5 +34,7 @@ class Renderer:
 
 
 if __name__ == '__main__':
+    color = (int(input("Введите цвет шара (R, G, B): ")), int(input()), int(input()))
+    res = int(input("Введите частоту разбивки: "))
     app = Renderer()
     app.run()

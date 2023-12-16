@@ -3,8 +3,9 @@ import pygame as pg
 from matrixFunctions import *
 
 class Object3D:
-    def __init__(self, render):
+    def __init__(self, render, color):
         self.render = render
+        self.color = color
 
         self.start = False
         self.x = 1
@@ -31,7 +32,7 @@ class Object3D:
         for node_list in face_list:
             num_nodes = len(node_list)
             if all((node < len(self.vertexes) for node in node_list)):
-                self.faces.append([node_list, np.array((210, 25, 255), np.uint8)])
+                self.faces.append([node_list, np.array(self.color, np.uint8)])
                 self.addEdges([(node_list[n - 1], node_list[n]) for n in range(num_nodes)])
 
     def addEdges(self, edge_list):
@@ -141,9 +142,9 @@ class Object3D:
                 theta = np.dot(normal, np.array([1, 2, -1])) / np.linalg.norm(normal) / np.linalg.norm(np.array([1, 2, -1]))
                 c += 1
                 if theta < 0:
-                    shade = 0.2 * color
+                    shade = 0.1 * color
                 else:
-                    shade = (theta * 0.8 + 0.2) * color
+                    shade = (theta * 0.9 + 0.1) * color
                 pg.draw.polygon(self.render.screen, shade, [(vertexes[node][0], vertexes[node][1]) for node in face[0]], 0)
 
             #if (len(face[0]) == 4):
