@@ -17,7 +17,7 @@ class Renderer:
     def create_objects(self):
         self.camera = Camera(self, [0, 0, -20])
         self.projection = Projection(self)
-        self.object = Sphere(0, 0, 0, 5, self, res=80)
+        self.object = Sphere(0, 0, 0, 5, self, res=60)
 
     def draw(self):
         self.screen.fill(pg.Color('dimgrey'))

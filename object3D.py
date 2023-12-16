@@ -31,7 +31,7 @@ class Object3D:
         for node_list in face_list:
             num_nodes = len(node_list)
             if all((node < len(self.vertexes) for node in node_list)):
-                self.faces.append([node_list, np.array((255, 255, 255), np.uint8)])
+                self.faces.append([node_list, np.array((210, 25, 255), np.uint8)])
                 self.addEdges([(node_list[n - 1], node_list[n]) for n in range(num_nodes)])
 
     def addEdges(self, edge_list):
@@ -115,7 +115,7 @@ class Object3D:
         vertexes /= vertexes[:, -1].reshape(-1, 1)
         vertexes[(vertexes > 3) | (vertexes < -3)] = 0
         vertexes = vertexes @ self.render.projection.to_screen_matrix
-        vertexes = vertexes[:, :2]
+        #vertexes = vertexes[:, :3]
 
         #for index, color_edge in enumerate(self.color_edges):
         #    color, edge = color_edge
@@ -127,20 +127,36 @@ class Object3D:
         #            text = self.font.render(self.label[index], True, pg.Color('white'))
         #            self.render.screen.blit(text, polygon[-1])
 
+        c = 0
 
         for face in self.faces:
             color = face[1]
-            if (len(face[0]) == 4):
-                first, second, third, fourth = face[0]
-                pg.draw.polygon(self.render.screen, pg.Color('white'), [vertexes[first], vertexes[second], vertexes[third], vertexes[fourth]])
-            elif len(face[0]) == 3:
-                first, second, third = face[0]
-                pg.draw.polygon(self.render.screen, pg.Color('white'), [vertexes[first], vertexes[second], vertexes[third]], 2)
+            towards_us = np.dot(np.cross((vertexes[face[0][1]] - vertexes[face[0][0]])[:3], (vertexes[face[0][2]] - vertexes[face[0][0]])[:3]), np.array([0, 0, 1]))
+                    
+
+            # Отображение только тех граней, которые обращены к камере
+            if towards_us > 0:
+                #normal = np.linalg.norm(normal)
+                normal = np.cross((np.array(self.vertexes[face[0][1]]) - np.array(self.vertexes[face[0][0]]))[:3], (np.array(self.vertexes[face[0][2]]) - np.array(self.vertexes[face[0][0]]))[:3])
+                theta = np.dot(normal, np.array([1, 2, -1])) / np.linalg.norm(normal) / np.linalg.norm(np.array([1, 2, -1]))
+                c += 1
+                if theta < 0:
+                    shade = 0.2 * color
+                else:
+                    shade = (theta * 0.8 + 0.2) * color
+                pg.draw.polygon(self.render.screen, shade, [(vertexes[node][0], vertexes[node][1]) for node in face[0]], 0)
+
+            #if (len(face[0]) == 4):
+            #    first, second, third, fourth = face[0]
+            #    pg.draw.polygon(self.render.screen, pg.Color('white'), [vertexes[first], vertexes[second], vertexes[third], vertexes[fourth]])
+            #elif len(face[0]) == 3:
+            #    first, second, third = face[0]
+            #    pg.draw.polygon(self.render.screen, pg.Color('white'), [vertexes[first], vertexes[second], vertexes[third]], 2)
 
 
         
-        for (first, second) in self.edges:
-            pg.draw.aaline(self.render.screen, pg.Color('green'), vertexes[first], vertexes[second], 2)
+        #for (first, second) in self.edges:
+        #    pg.draw.aaline(self.render.screen, pg.Color('green'), vertexes[first], vertexes[second], 2)
         #if self.draw_vertexes:
         #    for vertex in vertexes:
         #        pg.draw.circle(self.render.screen, pg.Color('white'), vertex, 4)

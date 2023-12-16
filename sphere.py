@@ -9,7 +9,7 @@ class Sphere(object3D.Object3D):
         latitudes = [n * np.pi / res for n in range(1, res)] #вычисление "широт" (без полюсных)
         longitudes = [n * 2 * np.pi / res for n in range(res)] #вычисление "долгот"
         
-        self.vertexes = [(x + r * np.sin(n) * np.sin(m), y - r * np.cos(m), z - r * np.cos(n) * np.sin(m), 1) for m in latitudes for n in longitudes]
+        self.vertexes = [[x + r * np.sin(n) * np.sin(m), y - r * np.cos(m), z - r * np.cos(n) * np.sin(m), 1] for m in latitudes for n in longitudes]
         
         num_nodes = (res - 1) * res
 
