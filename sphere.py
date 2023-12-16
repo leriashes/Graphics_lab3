@@ -17,6 +17,11 @@ class Sphere(object3D.Object3D):
         num_nodes = res*(res-1)
         self.addFaces([(m + n, 
                                (m + res) % num_nodes + n,
+                               (m + res) % res**2 + (n + 1) % res)
+                               #m + (n + 1) % res) 
+                               for n in range(res) for m in range(0, num_nodes - res, res)])
+        self.addFaces([(m + n, 
+                               #(m + res) % num_nodes + n,
                                (m + res) % res**2 + (n + 1) % res,
                                m + (n + 1) % res) 
                                for n in range(res) for m in range(0, num_nodes - res, res)])
@@ -27,5 +32,3 @@ class Sphere(object3D.Object3D):
         self.addFaces([(n, (n + 1) % res, num_nodes + 1) for n in range(res)])
         start_node = num_nodes - res
         self.addFaces([(num_nodes, start_node + (n + 1) % res, start_node + n) for n in range(res)])
-
-

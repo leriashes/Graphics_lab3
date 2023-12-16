@@ -1,5 +1,4 @@
 import pygame as pg
-from object3D import *
 from sphere import *
 from camera import *
 from projection import *
