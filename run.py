@@ -19,7 +19,7 @@ class Renderer:
         self.object = Sphere(0, 0, 0, 5, color, self, res)
 
     def draw(self):
-        self.screen.fill(pg.Color('dimgrey'))
+        self.screen.fill(pg.Color(105, 105, 105, 255))
         self.object.draw()
 
     def run(self):

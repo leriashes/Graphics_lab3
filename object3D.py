@@ -22,9 +22,6 @@ class Object3D:
         self.edges = []
         self.faces = []
 
-
-        self.font = pg.font.SysFont('Arial', 30, bold=True)
-        self.color_edges = [(pg.Color(219, 189, 33, 1), edge) for edge in self.edges]
         self.movement_flag, self.draw_vertexes = True, True
         self.label = ''
 
@@ -96,15 +93,6 @@ class Object3D:
         if key[pg.K_x]:
             self.scale((1 / 1.02))
 
-        if key[pg.K_m]:
-            self.start = True
-            self.x = float(input('Коэффициент для x: '))
-            self.y = float(input('Коэффициент для y: '))
-            self.z = float(input('Коэффициент для z: '))
-            print()
-
-            self.t = 0
-
 
     def movement(self):
         if self.movement_flag:
@@ -116,54 +104,24 @@ class Object3D:
         vertexes /= vertexes[:, -1].reshape(-1, 1)
         vertexes[(vertexes > 3) | (vertexes < -3)] = 0
         vertexes = vertexes @ self.render.projection.to_screen_matrix
-        #vertexes = vertexes[:, :3]
-
-        #for index, color_edge in enumerate(self.color_edges):
-        #    color, edge = color_edge
-        #    polygon = vertexes[edge]
-        #    pg.draw.polygon(self.render.screen, color, polygon, 2)
-        #    if not np.any((polygon == self.render.H_WIDTH) | (polygon == self.render.H_HEIGHT)):
-        #        pg.draw.polygon(self.render.screen, color, polygon, 2)
-        #        if self.label:
-        #            text = self.font.render(self.label[index], True, pg.Color('white'))
-        #            self.render.screen.blit(text, polygon[-1])
-
-        c = 0
+        vertexes = vertexes[:, :3]
 
         for face in self.faces:
             color = face[1]
             towards_us = np.dot(np.cross((vertexes[face[0][1]] - vertexes[face[0][0]])[:3], (vertexes[face[0][2]] - vertexes[face[0][0]])[:3]), np.array([0, 0, 1]))
                     
-
-            # Отображение только тех граней, которые обращены к камере
+            #отображение только тех граней, которые обращены к камере
             if towards_us > 0:
-                #normal = np.linalg.norm(normal)
                 normal = np.cross((np.array(self.vertexes[face[0][1]]) - np.array(self.vertexes[face[0][0]]))[:3], (np.array(self.vertexes[face[0][2]]) - np.array(self.vertexes[face[0][0]]))[:3])
-                theta = np.dot(normal, np.array([1, 2, -1])) / np.linalg.norm(normal) / np.linalg.norm(np.array([1, 2, -1]))
-                c += 1
-                if theta < 0:
-                    shade = 0.1 * color
+                cosTheta = np.dot(normal, np.array([1, 2, -1])) / np.linalg.norm(normal) / np.linalg.norm(np.array([1, 2, -1]))
+             
+                if cosTheta <= 0 or cosTheta >= math.pi / 2:
+                    shade = 0.2 * color
                 else:
-                    shade = (theta * 0.9 + 0.1) * color
+                    shade = (cosTheta * 0.8 + 0.2) * color
                 pg.draw.polygon(self.render.screen, shade, [(vertexes[node][0], vertexes[node][1]) for node in face[0]], 0)
-
-            #if (len(face[0]) == 4):
-            #    first, second, third, fourth = face[0]
-            #    pg.draw.polygon(self.render.screen, pg.Color('white'), [vertexes[first], vertexes[second], vertexes[third], vertexes[fourth]])
-            #elif len(face[0]) == 3:
-            #    first, second, third = face[0]
-            #    pg.draw.polygon(self.render.screen, pg.Color('white'), [vertexes[first], vertexes[second], vertexes[third]], 2)
-
-
-        
-        #for (first, second) in self.edges:
-        #    pg.draw.aaline(self.render.screen, pg.Color('green'), vertexes[first], vertexes[second], 2)
-        #if self.draw_vertexes:
-        #    for vertex in vertexes:
-        #        pg.draw.circle(self.render.screen, pg.Color('white'), vertex, 4)
-        #        if not np.any((vertex == self.render.H_WIDTH) | (vertex == self.render.H_HEIGHT)):
-        #            pg.draw.circle(self.render.screen, pg.Color('white'), vertex, 4)
-
+             
+                
     def translate(self, pos):
         self.vertexes = self.vertexes @ translate(pos)
 

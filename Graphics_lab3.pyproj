@@ -22,7 +22,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="camera.py" />
-    <Compile Include="Graphics_lab3.py" />
     <Compile Include="matrixFunctions.py" />
     <Compile Include="object3D.py" />
     <Compile Include="projection.py" />
