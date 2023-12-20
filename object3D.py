@@ -62,18 +62,6 @@ class Object3D:
 
     def control(self):
         key = pg.key.get_pressed()
-        if key[pg.K_a]:
-            self.translate((-self.moving_speed, 0, 0))
-        if key[pg.K_d]:
-            self.translate((self.moving_speed, 0, 0))
-        if key[pg.K_w]:
-            self.translate((0, 0, self.moving_speed))
-        if key[pg.K_s]:
-            self.translate((0, 0, -self.moving_speed))
-        if key[pg.K_q]:
-            self.translate((0, -self.moving_speed, 0))
-        if key[pg.K_e]:
-            self.translate((0, self.moving_speed, 0))
 
         if key[pg.K_i]:
             self.rotate_x((self.rotation_speed))
@@ -87,11 +75,6 @@ class Object3D:
             self.rotate_z((self.rotation_speed))
         if key[pg.K_o]:
             self.rotate_z((-self.rotation_speed))
-
-        if key[pg.K_z]:
-            self.scale((1.02))
-        if key[pg.K_x]:
-            self.scale((1 / 1.02))
 
 
     def movement(self):
